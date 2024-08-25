@@ -1,0 +1,66 @@
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="v1-1" author="Nikolay Mikhaylov">
+        <createTable tableName="department">
+            <column name="department_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="department_name" type="varchar(30)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="v1-2" author="Nikolay Mikhaylov">
+        <createTable tableName="investigators">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="uuid" type="varchar(40)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="name" type="varchar(50)"/>
+            <column name="surname" type="varchar(50)"/>
+            <column name="department_id" type="bigint"/>
+            <column name="city" type="varchar(255)"/>
+        </createTable>
+            <addForeignKeyConstraint constraintName="fk_investigators_department"
+                                     baseTableName="investigators"
+                                     baseColumnNames="department_id"
+                                     referencedTableName="department"
+                                     referencedColumnNames="department_id"/>
+
+    </changeSet>
+
+    <changeSet id="v1-3" author="your_name">
+        <createTable tableName="cases">
+            <column name="case_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="case_description" type="varchar(255)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="v1-4" author="your_name">
+        <createTable tableName="investigator_cases">
+            <column name="investigator_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="case_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey columnNames="investigator_id, case_id" tableName="investigator_cases"/>
+        <addForeignKeyConstraint constraintName="fk_investigator_cases_investigator"
+                                 baseTableName="investigator_cases"
+                                 baseColumnNames="investigator_id"
+                                 referencedTableName="investigators"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint constraintName="fk_investigator_cases_case"
+                                 baseTableName="investigator_cases"
+                                 baseColumnNames="case_id"
+                                 referencedTableName="cases"
+                                 referencedColumnNames="case_id"/>
+    </changeSet>
+</databaseChangeLog>
